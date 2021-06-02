@@ -12,6 +12,9 @@ class MoviesCollectionView: UICollectionView {
     let cellID = "cellID"
     
     var movieDataSource = [MoviesModel]()
+    var movieForDetail: MoviesModel?
+    
+    var moviesCVDelegate: MoviesCollectionViewDelegate?
     
     let urlString = APIURLs.fullPath
     let paginationURL = APIURLs.pagingPath
@@ -22,26 +25,16 @@ class MoviesCollectionView: UICollectionView {
         ref.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
         return ref
     }()
-        
+    
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
-        backgroundColor = .white
+        backgroundColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
         delegate = self
         dataSource = self
         register(MovieCell.self, forCellWithReuseIdentifier: cellID)
         refreshControl = customRefreshControl
         
-        NetworkManager.shared.request(urlString: urlString) { [weak self] result in
-            switch result {
-            case .success(let movies):
-                self?.movieDataSource = movies
-                DispatchQueue.main.async {
-                    self?.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
+        loadMoreItems(page: "\(1)")
     }
     
     required init?(coder: NSCoder) {
@@ -57,7 +50,7 @@ class MoviesCollectionView: UICollectionView {
     }
     
     func loadMoreItems(page: String) {
-        NetworkManager.shared.request(urlString: paginationURL + page)  { [weak self] result in
+        MoviesNetworkService.shared.request(urlString: paginationURL + page)  { [weak self] result in
             switch result {
             case .success(let movies):
                 self?.movieDataSource.append(contentsOf: movies)
@@ -71,19 +64,15 @@ class MoviesCollectionView: UICollectionView {
     }
     
     func showController(movie: MoviesModel) {
-        let detailsVC = DetailsViewController()
-        detailsVC.movies = movieDataSource
-        //TO DO: SORRY CAN'T FIND OTHER WAY to do this
-        let VC = MainController()
-        VC.present(detailsVC, animated: true)
-        
+        movieForDetail = movie
+        moviesCVDelegate?.cellDidtapped()
     }
 }
 
 //MARK: CollectionViewDelegateFlowLayout
 extension MoviesCollectionView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width - 12, height: collectionView.frame.height/5)
+        return CGSize(width: collectionView.bounds.width - 12, height: collectionView.frame.height/4)
     }
 }
 //MARK: CollectionViewDataSource
@@ -94,15 +83,14 @@ extension MoviesCollectionView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath) as! MovieCell
-        cell.backgroundColor = .green
         
         let movie = movieDataSource[indexPath.row]
         cell.titleView.text = movie.title
         cell.releaseDateView.text = movie.releaseDate
-        cell.ratingView.text = "\(movie.rating)"
-        cell.bgImageView.downloaded(from: APIURLs.imageBaseURL + movie.imageURL)
+        cell.ratingView.text = "\(movie.voteAverage)"
+        cell.bgImageView.downloaded(from: APIURLs.imageBaseURL + movie.backdropPath)
         
-        if indexPath.row == movieDataSource.count - 1 { // last cell
+        if indexPath.row == movieDataSource.count - 1 {
             loadMoreItems(page: "\(nextPage)")
             nextPage += 1
         }

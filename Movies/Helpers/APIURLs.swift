@@ -18,7 +18,7 @@ struct APIURLs {
     
     static let apiKey = "fc0de9793aaae73e4b61f32b4895f9ab"
     
-    static let imageBaseURL = "https://image.tmdb.org/t/p/w92"
+    static let imageBaseURL = "https://image.tmdb.org/t/p/w500"
 
     static let fullPath = baseUrl + apiVersion + movieSection + nowPlaying + apiKeyPath + apiKey
     

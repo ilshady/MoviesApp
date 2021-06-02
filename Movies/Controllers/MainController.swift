@@ -7,23 +7,41 @@
 
 import UIKit
 
+protocol MoviesCollectionViewDelegate {
+    func cellDidtapped()
+}
+
 class MainController: UIViewController {
     
     //MARK: Properties
-    var moviesCollectionView: MoviesCollectionView!
+    private var moviesCollectionView: MoviesCollectionView!
     
-    //TODO: how to avoid this?
-    let layout = UICollectionViewFlowLayout()
+    private let layout = UICollectionViewFlowLayout()
     
     //MARK: Methods
     override func loadView() {
         moviesCollectionView = MoviesCollectionView(frame: .zero, collectionViewLayout: layout)
         self.view = moviesCollectionView
+        
+        moviesCollectionView.moviesCVDelegate = self
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
 }
 
+//MARK: MoviesCollectionViewDelegate
+extension MainController: MoviesCollectionViewDelegate {
+    func cellDidtapped() {
+        let detailsVC = DetailsViewController()
+        detailsVC.movie = moviesCollectionView.movieForDetail
+        present(detailsVC, animated: true)
+    }
+    
+}

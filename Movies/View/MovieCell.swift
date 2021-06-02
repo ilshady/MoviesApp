@@ -12,8 +12,7 @@ class MovieCell: UICollectionViewCell {
     let titleView: UILabel = {
         let text = UILabel()
         text.text = "temp text"
-        text.font = UIFont.systemFont(ofSize: 16)
-        text.backgroundColor = .gray
+        text.font = UIFont.systemFont(ofSize: 24, weight: .heavy)
         text.textColor = .white
         text.numberOfLines = 0
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -23,8 +22,7 @@ class MovieCell: UICollectionViewCell {
     let releaseDateView: UILabel = {
         let text = UILabel()
         text.text = "temp text"
-        text.font = UIFont.systemFont(ofSize: 16)
-        text.backgroundColor = .gray
+        text.font = UIFont.boldSystemFont(ofSize: 16)
         text.textColor = .white
         text.numberOfLines = 0
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -35,8 +33,10 @@ class MovieCell: UICollectionViewCell {
         let text = UILabel()
         text.text = "temp text"
         text.font = UIFont.systemFont(ofSize: 16)
-        text.backgroundColor = .gray
-        text.textColor = .white
+        text.backgroundColor = .white
+        text.layer.cornerRadius = 8
+        text.layer.masksToBounds = true
+        text.textColor = .black
         text.numberOfLines = 0
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
@@ -46,15 +46,28 @@ class MovieCell: UICollectionViewCell {
         let image = UIImageView()
         image.contentMode = .scaleToFill
         image.image = #imageLiteral(resourceName: "Screen Shot 2021-02-19 at 20.41.40")
+        image.layer.cornerRadius = 15
+        image.layer.masksToBounds = true
         image.translatesAutoresizingMaskIntoConstraints = false
+        image.addoverlay(color: .black, alpha: 0.5)
         return image
     }()
-    
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        setupSubviews()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupCell() {
+        backgroundColor = .green
+    }
+    
+    private func setupSubviews() {
         addSubview(bgImageView)
         addSubview(titleView)
         addSubview(releaseDateView)
@@ -69,24 +82,16 @@ class MovieCell: UICollectionViewCell {
             
             titleView.centerYAnchor.constraint(equalTo: centerYAnchor),
             titleView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleView.heightAnchor.constraint(equalToConstant: 40),
             titleView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, constant: -10),
             
             releaseDateView.centerXAnchor.constraint(equalTo: centerXAnchor),
             releaseDateView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 8),
-            releaseDateView.heightAnchor.constraint(equalToConstant: 40),
             releaseDateView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, constant: -10),
-        
+            
             ratingView.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
             ratingView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             ratingView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor),
-            ratingView.heightAnchor.constraint(equalToConstant: 40)
+            //            ratingView.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
 }
