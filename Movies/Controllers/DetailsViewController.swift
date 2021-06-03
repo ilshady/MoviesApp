@@ -11,7 +11,7 @@ class DetailsViewController: UIViewController {
     
     var movie: MoviesModel?
     
-    private var mainImage: UIImageView = {
+    private var mainImageView: UIImageView = {
         let image = UIImageView()
         image.image = #imageLiteral(resourceName: "Screen Shot 2021-02-19 at 20.41.40")
         image.contentMode = .scaleAspectFit
@@ -60,7 +60,7 @@ class DetailsViewController: UIViewController {
     
     private func setupValues() {
         if let movie = movie {
-            mainImage.downloaded(from: APIURLs.imageBaseURL + movie.backdropPath)
+            mainImageView.downloaded(from: APIURLs.imageBaseURL + movie.backdropPath)
             titleLabel.text = movie.title
             dateLabel.text = movie.releaseDate
             descriptionLabel.text = movie.overview
@@ -68,33 +68,36 @@ class DetailsViewController: UIViewController {
         
     }
     
+}
+//MARK: DetailsViewController Setup Subviews
+extension DetailsViewController {
+    
     private func setupSubviews() {
         
-        view.addSubview(mainImage)
+        view.addSubview(mainImageView)
         view.addSubview(titleLabel)
         view.addSubview(dateLabel)
         view.addSubview(descriptionLabel)
         
         NSLayoutConstraint.activate([
-            mainImage.topAnchor.constraint(equalTo: view.topAnchor),
-            mainImage.leftAnchor.constraint(equalTo: view.leftAnchor),
-            mainImage.rightAnchor.constraint(equalTo: view.rightAnchor),
-            mainImage.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor),
+            mainImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            mainImageView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            mainImageView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            mainImageView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor),
             
-            titleLabel.topAnchor.constraint(equalTo: mainImage.bottomAnchor, constant: -60),
+            titleLabel.topAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: -60),
             titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
             titleLabel.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: 10),
             
             dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             dateLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
             dateLabel.widthAnchor.constraint(equalToConstant: 100),
-            dateLabel.bottomAnchor.constraint(equalTo: mainImage.bottomAnchor, constant: -10),
+            dateLabel.bottomAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: -10),
             
-            descriptionLabel.topAnchor.constraint(equalTo: mainImage.bottomAnchor, constant: 10),
+            descriptionLabel.topAnchor.constraint(equalTo: mainImageView.bottomAnchor, constant: 10),
             descriptionLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
             descriptionLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
             descriptionLabel.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor)
         ])
     }
-    
 }
