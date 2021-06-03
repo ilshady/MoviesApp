@@ -12,11 +12,9 @@ struct MainModel: Codable {
 }
 
 struct MoviesModel: Codable {
-    
     let title: String
     let releaseDate: String
     let backdropPath: String
     let overview: String
     let voteAverage: Double
-    
 }

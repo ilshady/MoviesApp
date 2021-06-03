@@ -79,7 +79,7 @@ class DetailsViewController: UIViewController {
             mainImage.topAnchor.constraint(equalTo: view.topAnchor),
             mainImage.leftAnchor.constraint(equalTo: view.leftAnchor),
             mainImage.rightAnchor.constraint(equalTo: view.rightAnchor),
-            mainImage.heightAnchor.constraint(equalToConstant: 300),
+            mainImage.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor),
             
             titleLabel.topAnchor.constraint(equalTo: mainImage.bottomAnchor, constant: -60),
             titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),

@@ -11,6 +11,8 @@ class MoviesNetworkService {
     
     static let shared = MoviesNetworkService()
     
+    let dataCache = NSCache<AnyObject, AnyObject>()
+    
     private init() {}
     
     func request(urlString: String, completion: @escaping (Result<[MoviesModel], Error>) -> Void) {
@@ -34,7 +36,12 @@ class MoviesNetworkService {
                         
                         results.forEach({
                             let movie = MoviesModel(title: $0.title, releaseDate: $0.releaseDate, backdropPath: $0.backdropPath, overview: $0.overview, voteAverage: $0.voteAverage)
-                            moviesToReturn.append(movie)
+                            if let cachedData = self.dataCache.object(forKey: movie.backdropPath as AnyObject) as? MoviesModel {
+                                moviesToReturn.append(cachedData)
+                            } else {
+                                moviesToReturn.append(movie)
+                                self.dataCache.setObject(movie as AnyObject, forKey: movie.backdropPath as AnyObject)
+                            }
                         })
                         
                     }
